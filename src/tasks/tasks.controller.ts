@@ -6,10 +6,12 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task, TaskStatus } from './task.model';
 import { CreateTaskDTO } from './dto/create-task.dto';
+import { GetTasksFilterDto } from './dto/create-tasks-filter.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -17,9 +19,22 @@ export class TasksController {
 
   // we want this method to call whenever any get req comes
   // that is why we are using Get decorator
+  //   @Get()
+  //   getAllTasks(): Task[] {
+  //     return this.tasksService.getAllTasks();
+  //   }
+
+  //Updated with filter:
   @Get()
-  getAllTasks(): Task[] {
-    return this.tasksService.getAllTasks();
+  getTasks(@Query() filterDto: GetTasksFilterDto): Task[] {
+    //if we have any filters defined, call tasksService.getTasksWithFilters
+    //otherwise just get all tasks
+
+    if (Object.keys(filterDto).length) {
+      return this.tasksService.getTasksWithFilters(filterDto);
+    } else {
+      return this.tasksService.getAllTasks();
+    }
   }
 
   //1
