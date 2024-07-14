@@ -1,3 +1,8 @@
+import { CreateTaskDTO } from './dto/create-task.dto';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { UpdateTaskStatusDTO } from './dto/update-task-status.dto';
+import { Task } from './task.model';
+import { TasksService } from './tasks.service';
 import {
   Body,
   Controller,
@@ -8,17 +13,13 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { TasksService } from './tasks.service';
-import { Task, TaskStatus } from './task.model';
-import { CreateTaskDTO } from './dto/create-task.dto';
-import { GetTasksFilterDto } from './dto/create-tasks-filter.dto';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
-  // we want this method to call whenever any get req comes
-  // that is why we are using Get decorator
+  //we want this method to call whenever any get req comes
+  //that is why we are using Get decorator
   //   @Get()
   //   getAllTasks(): Task[] {
   //     return this.tasksService.getAllTasks();
@@ -72,8 +73,10 @@ export class TasksController {
   @Patch('/:id/status')
   updateTaskStatus(
     @Param('id') id: string,
-    @Body('status') status: TaskStatus,
+    // @Body('status') status: TaskStatus,
+    @Body() updateTaskStatusDto: UpdateTaskStatusDTO,
   ): Task {
+    const { status } = updateTaskStatusDto;
     return this.tasksService.updateTaskStatus(id, status);
   }
 }
